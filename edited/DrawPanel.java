@@ -11,20 +11,17 @@ public class DrawPanel extends JPanel
     
     static final int MAX = 6; 
     private Random randomNumbers = new Random();   
-    private MyLine[] lines; 	// array of lines
-    private MyOval[] ovals;  	// array of ovals
-    private MyRect[] rectangles;  	// array of rectangleangles
+    private MyShape[] shapes;  	// array of rectangleangles
     private String status;
+    int randShape = randomNumbers.nextInt(3);
 
     public DrawPanel()   // ctor creates a panel with random shapes
     {
         super(new BorderLayout());
         setBackground(Color.WHITE);    
-        lines = new MyLine[1 + randomNumbers.nextInt(MAX)];
-        ovals = new MyOval[1 + randomNumbers.nextInt(MAX)];
-        rectangles = new MyRect[1 + randomNumbers.nextInt(MAX)];        
-        status = "Lines: " + lines.length + " Ovals: " + ovals.length + " Rectangles: " + rectangles.length;
-            for (int cnt = 0; cnt < lines.length; cnt++) 
+        shapes = new MyShape[MAX];        
+    //    status = "Lines: " + lines.length + " Ovals: " + ovals.length + " Rectangles: " + rectangles.length;
+            for (int cnt = 0; cnt < shapes.length; cnt++) 
             {  // create lines
                 int x1 = randomNumbers.nextInt(450);    // generate random coords
                 int y1 = randomNumbers.nextInt(450);
@@ -33,36 +30,25 @@ public class DrawPanel extends JPanel
                   // generate random color
                 Color color = new Color(randomNumbers.nextInt(256), randomNumbers.nextInt(256), randomNumbers.nextInt(256));         
                   // add line to the array of lines to be displayed
-                lines[cnt] = new MyLine();
+                boolean filled = randomNumbers.nextBoolean();
+                
+                if(randShape == 0) 
+                {
+                    shapes[cnt] = new MyLine(x1, y1, x2, y2, color, filled);
+                }
+                
+                else if(randShape == 1) 
+                {
+                    shapes[cnt] = new MyRect(x1, y1, x2, y2, color, filled);
+                }
+                
+                else 
+                {
+                    shapes[cnt] = new MyOval(x1, y1, x2, y2, color, filled);
+                }
             } // endfor Lines
             
-            for (int count = 0; count < ovals.length; count++)
-            {
-                int x1 = randomNumbers.nextInt(450);
-                int y1 = randomNumbers.nextInt(450);
-                int x2 = randomNumbers.nextInt(450);
-                int y2 = randomNumbers.nextInt(450);
-                
-                Color color = new Color (randomNumbers.nextInt(256), randomNumbers.nextInt(256), randomNumbers.nextInt(256));
-                
-                boolean filled = randomNumbers.nextBoolean();
-                
-                ovals[ count ] = new MyOval( );
-            }    //end for Ovals
-            
-            for (int count = 0; count < rectangles.length; count++)
-            {
-                int x1 = randomNumbers.nextInt(450);
-                int y1 = randomNumbers.nextInt(450);
-                int x2 = randomNumbers.nextInt(450);
-                int y2 = randomNumbers.nextInt(450);
-                
-                Color color = new Color (randomNumbers.nextInt(256), randomNumbers.nextInt(256), randomNumbers.nextInt(256));
-                
-                boolean filled = randomNumbers.nextBoolean();
-                
-                rectangles[ count ] = new MyRect( );
-            }    //end for rectangles
+        
             
             
     }//DrawPanel()
@@ -74,14 +60,8 @@ public class DrawPanel extends JPanel
     {
         super.paintComponent(g);
         
-        for (MyLine line : lines)
-            line.draw(g);
-        
-        for (MyOval oval : ovals)
-            oval.draw(g);
-        
-        for (MyRect rectangle : rectangles)
-            rectangle.draw(g);
+        for (MyShape shape : shapes)
+            shape.draw(g)
     }      //end paintComponent
     
     public String getStatus()
